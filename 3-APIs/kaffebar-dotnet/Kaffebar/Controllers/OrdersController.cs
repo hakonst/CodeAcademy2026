@@ -7,6 +7,19 @@ namespace Kaffebar.Controllers;
 [Route("orders")]
 public class OrdersController(Dictionary<Guid, OrderResponse> orders) : ControllerBase
 {
+    [HttpGet]
+    [ProducesResponseType<PagedResponse<OrderResponse>>(StatusCodes.Status200OK)]
+    public IActionResult GetOrders([FromQuery] OrderQuery query)
+    {
+        var filtered = orders.Values
+            .Where(o => query.Status == null || o.Status == query.Status)
+            .ToList();
+
+        var items = filtered.Skip(query.Offset).Take(query.Limit);
+
+        return Ok(new PagedResponse<OrderResponse>(items, filtered.Count, query.Limit, query.Offset));
+    }
+
     [HttpPost]
     [ProducesResponseType<OrderResponse>(StatusCodes.Status201Created)]
     public IActionResult CreateOrder(CreateOrderRequest request)

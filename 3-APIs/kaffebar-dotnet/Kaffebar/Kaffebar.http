@@ -17,6 +17,10 @@ Content-Type: application/json
   "quantity": 2
 }
 
+### Hent alle bestillinger (med valgfri filtrering og paginering)
+GET {{host}}/orders?status=PENDING&limit=10&offset=0
+Accept: application/json
+
 ### Hent spesifikk bestilling
 GET {{host}}/orders/00000000-0000-0000-0000-000000000000
 Accept: application/json

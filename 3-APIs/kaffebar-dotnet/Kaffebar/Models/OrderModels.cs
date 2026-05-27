@@ -22,6 +22,14 @@ public record CreateOrderRequest(
 
 public record UpdateOrderStatusRequest([Required] OrderStatus Status);
 
+public record OrderQuery(
+    OrderStatus? Status,
+    [Range(1, 100)] int Limit = 20,
+    [Range(0, int.MaxValue)] int Offset = 0
+);
+
+public record PagedResponse<T>(IEnumerable<T> Items, int Total, int Limit, int Offset);
+
 public record OrderResponse(
     Guid OrderId,
     Guid CoffeeId,
