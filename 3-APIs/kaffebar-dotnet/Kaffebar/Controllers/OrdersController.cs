@@ -15,4 +15,15 @@ public class OrdersController(Dictionary<Guid, OrderResponse> orders) : Controll
         orders[order.OrderId] = order;
         return CreatedAtAction(nameof(CreateOrder), new { orderId = order.OrderId }, order);
     }
+
+    [HttpGet("{orderId:guid}")]
+    [ProducesResponseType<OrderResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult GetOrder(Guid orderId)
+    {
+        if (!orders.TryGetValue(orderId, out var order))
+            return NotFound();
+
+        return Ok(order);
+    }
 }
