@@ -21,6 +21,14 @@ Content-Type: application/json
 GET {{host}}/orders/00000000-0000-0000-0000-000000000000
 Accept: application/json
 
+### Oppdater ordrestatus
+PATCH {{host}}/orders/00000000-0000-0000-0000-000000000000/status
+Content-Type: application/json
+
+{
+  "status": "BREWING"
+}
+
 ### Se den genererte OpenAPI-spesifikasjonen (åpne i browser)
 # {{host}}/openapi/v1.json
 

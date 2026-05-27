@@ -6,6 +6,8 @@ public enum CoffeeSize { SMALL, MEDIUM, LARGE };
 
 public enum MilkType { WHOLE, SKIMMED, OAT, SOY };
 
+public enum OrderStatus { PENDING, BREWING, READY };
+
 public record CreateOrderRequest(
     Guid CoffeeId,
     CoffeeSize Size,
@@ -18,6 +20,8 @@ public record CreateOrderRequest(
     int Quantity
 );
 
+public record UpdateOrderStatusRequest([Required] OrderStatus Status);
+
 public record OrderResponse(
     Guid OrderId,
     Guid CoffeeId,
@@ -25,5 +29,6 @@ public record OrderResponse(
     MilkType MilkType,
     bool? ExtraShot,
     string CustomerName,
-    int Quantity
+    int Quantity,
+    OrderStatus Status
 );
