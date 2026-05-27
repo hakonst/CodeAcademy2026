@@ -9,7 +9,10 @@ POST {{host}}/orders
 Content-Type: application/json
 
 {
-  "coffeeId": "00000000-0000-0000-0000-000000000001"
+  "coffeeId": "00000000-0000-0000-0000-000000000001",
+  "size": "MEDIUM",
+  "milkType": "OAT",
+  "extraShot": true
 }
 
 ### Se den genererte OpenAPI-spesifikasjonen (åpne i browser)
