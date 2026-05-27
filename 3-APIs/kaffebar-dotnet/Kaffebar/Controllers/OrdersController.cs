@@ -24,7 +24,7 @@ public class OrdersController(Dictionary<Guid, OrderResponse> orders) : Controll
     [ProducesResponseType<OrderResponse>(StatusCodes.Status201Created)]
     public IActionResult CreateOrder(CreateOrderRequest request)
     {
-        var order = new OrderResponse(Guid.NewGuid(), request.CoffeeId, request.Size, request.MilkType, request.ExtraShot, request.CustomerName, request.Quantity, OrderStatus.PENDING);
+        var order = new OrderResponse(Guid.NewGuid(), request.CustomerName, request.Items, OrderStatus.PENDING);
         orders[order.OrderId] = order;
         return CreatedAtAction(nameof(GetOrder), new { orderId = order.OrderId }, order);
     }

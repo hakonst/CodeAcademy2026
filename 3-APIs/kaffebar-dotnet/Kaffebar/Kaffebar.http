@@ -9,12 +9,11 @@ POST {{host}}/orders
 Content-Type: application/json
 
 {
-  "coffeeId": "00000000-0000-0000-0000-000000000001",
-  "size": "MEDIUM",
-  "milkType": "OAT",
-  "extraShot": true,
   "customerName": "Ola Nordmann",
-  "quantity": 2
+  "items": [
+    { "type": "coffee", "size": "MEDIUM", "milkType": "OAT", "extraShot": true },
+    { "type": "pastry", "name": "Croissant", "isVegan": false }
+  ]
 }
 
 ### Hent alle bestillinger (med valgfri filtrering og paginering)

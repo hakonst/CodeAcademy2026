@@ -9,15 +9,11 @@ public enum MilkType { WHOLE, SKIMMED, OAT, SOY };
 public enum OrderStatus { PENDING, BREWING, READY };
 
 public record CreateOrderRequest(
-    Guid CoffeeId,
-    CoffeeSize Size,
-    MilkType MilkType,
-    bool? ExtraShot,
     [Required]
     [StringLength(50, MinimumLength = 2)]
     string CustomerName,
-    [Range(1, 10)]
-    int Quantity
+    [MinLength(1)]
+    List<OrderItem> Items
 );
 
 public record UpdateOrderStatusRequest([Required] OrderStatus Status);
@@ -32,11 +28,7 @@ public record PagedResponse<T>(IEnumerable<T> Items, int Total, int Limit, int O
 
 public record OrderResponse(
     Guid OrderId,
-    Guid CoffeeId,
-    CoffeeSize Size,
-    MilkType MilkType,
-    bool? ExtraShot,
     string CustomerName,
-    int Quantity,
+    List<OrderItem> Items,
     OrderStatus Status
 );
