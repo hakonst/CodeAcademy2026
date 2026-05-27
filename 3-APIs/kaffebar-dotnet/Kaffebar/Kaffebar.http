@@ -4,6 +4,14 @@
 GET {{host}}/menu
 Accept: application/json
 
+### Opprett bestilling
+POST {{host}}/orders
+Content-Type: application/json
+
+{
+  "coffeeId": "00000000-0000-0000-0000-000000000001"
+}
+
 ### Se den genererte OpenAPI-spesifikasjonen (åpne i browser)
 # {{host}}/openapi/v1.json
 

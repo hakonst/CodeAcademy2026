@@ -2,25 +2,19 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Registrer OpenAPI-tjenestene. Disse genererer spesifikasjonen
-// automatisk basert på endepunktene og typene i prosjektet (code-first).
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // Eksponerer den genererte spesifikasjonen på /openapi/v1.json
     app.MapOpenApi();
-
-    // Scalar gir et moderne, interaktivt UI på /scalar/v1
-    // for å utforske og teste API-et.
     app.MapScalarApiReference();
 }
 
-// --- Hello Coffee --------------------------------------------------------
-// Et minimal API-endepunkt som returnerer en hardkodet kaffemeny.
-// Dette er utgangspunktet for workshopen. Bygg videre herfra!
+// In-memory order store
+var orders = new Dictionary<Guid, OrderResponse>();
+
 app.MapGet("/menu", () => new[]
 {
     new Coffee(Guid.NewGuid(), "Kaffe Latte", 48.50m),
@@ -31,8 +25,20 @@ app.MapGet("/menu", () => new[]
 .WithSummary("Hent kaffemeny")
 .WithDescription("Returnerer en liste over alle tilgjengelige kaffedrikker i kaffebaren.");
 
+app.MapPost("/orders", (CreateOrderRequest request) =>
+{
+    var order = new OrderResponse(Guid.NewGuid(), request.CoffeeId);
+    orders[order.OrderId] = order;
+    return TypedResults.Created($"/orders/{order.OrderId}", order);
+})
+.WithName("CreateOrder")
+.WithSummary("Legg inn bestilling")
+.WithDescription("Oppretter en ny kaffebestilling og returnerer orderen med autogenerert OrderId.");
+
 app.Run();
 
-// DTO-er kan ligge i Program.cs når prosjektet er lite.
-// Etter hvert er det ryddig å flytte dem til egne filer i en Models-mappe.
 public record Coffee(Guid Id, string Name, decimal Price);
+
+public record CreateOrderRequest(Guid CoffeeId);
+
+public record OrderResponse(Guid OrderId, Guid CoffeeId);
