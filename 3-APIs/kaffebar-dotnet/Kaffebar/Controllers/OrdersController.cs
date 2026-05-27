@@ -1,4 +1,5 @@
 using Kaffebar.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kaffebar.Controllers;
@@ -43,7 +44,9 @@ public class OrdersController(Dictionary<Guid, OrderResponse> orders) : Controll
         return Ok(order);
     }
 
+    [Authorize]
     [HttpPatch("{orderId:guid}/status")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<OrderResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public IActionResult UpdateOrderStatus(Guid orderId, UpdateOrderStatusRequest request)

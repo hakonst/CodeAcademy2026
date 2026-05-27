@@ -1,4 +1,5 @@
 using Kaffebar.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kaffebar.Controllers;
@@ -7,6 +8,7 @@ namespace Kaffebar.Controllers;
 [Route("menu")]
 public class MenuController : ControllerBase
 {
+    [AllowAnonymous]
     [HttpGet]
     public IActionResult GetMenu() => Ok(new[]
     {
