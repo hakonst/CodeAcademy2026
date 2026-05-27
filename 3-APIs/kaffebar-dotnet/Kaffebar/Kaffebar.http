@@ -12,7 +12,9 @@ Content-Type: application/json
   "coffeeId": "00000000-0000-0000-0000-000000000001",
   "size": "MEDIUM",
   "milkType": "OAT",
-  "extraShot": true
+  "extraShot": true,
+  "customerName": "Ola Nordmann",
+  "quantity": 2
 }
 
 ### Se den genererte OpenAPI-spesifikasjonen (åpne i browser)
