@@ -18,11 +18,14 @@ public class OrdersController(Dictionary<Guid, OrderResponse> orders) : Controll
 
     [HttpGet("{orderId:guid}")]
     [ProducesResponseType<OrderResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public IActionResult GetOrder(Guid orderId)
     {
         if (!orders.TryGetValue(orderId, out var order))
-            return NotFound();
+            return Problem(
+                title: "Bestilling ikke funnet",
+                detail: $"Fant ingen bestilling med id '{orderId}'.",
+                statusCode: StatusCodes.Status404NotFound);
 
         return Ok(order);
     }
