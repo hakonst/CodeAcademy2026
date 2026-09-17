@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * RUNDE 1 — her begynner du.  Se 4-Frontend/oppgave.md, oppgave 1.
@@ -32,20 +32,45 @@ import { useEffect, useState } from "react";
 
 export type ConnectionState = "connecting" | "open" | "closed";
 
+const ORDER_EVENTS = ["order.created", "order.status-changed"] as const;
+
 export function useEventSource(
   url: string,
   onEvent: (event: MessageEvent) => void,
 ): ConnectionState {
-  const [state] = useState<ConnectionState>("closed");
+  const [state, setState] = useState<ConnectionState>("connecting");
+
+  const onEventRef = useRef(onEvent);
+  useEffect(() => {
+    onEventRef.current = onEvent;
+  }, [onEvent]);
 
   useEffect(() => {
-    // TODO (runde 1): opprett en EventSource mot `url`, kall `onEvent` for hver
-    //                 hendelse, og lukk forbindelsen når komponenten forsvinner.
-    //                 Sett `state` til "open" når forbindelsen er oppe, slik at
-    //                 indikatoren øverst til høyre slår om til «live».
-    void url;
-    void onEvent;
-  }, [url, onEvent]);
+    const source = new EventSource(url);
+
+    const forward = (event: Event) => onEventRef.current(event as MessageEvent);
+
+    const handleReady = (event: Event) => {
+      setState("open");
+      forward(event);
+    };
+
+    const handleError = () => {
+      setState(source.readyState === EventSource.CLOSED ? "closed" : "connecting");
+    };
+
+    source.addEventListener("open", () => setState("open"));
+    source.addEventListener("ready", handleReady);
+    source.addEventListener("error", handleError);
+    for (const name of ORDER_EVENTS) {
+      source.addEventListener(name, forward);
+    }
+
+    return () => {
+      source.close();
+      setState("closed");
+    };
+  }, [url]);
 
   return state;
 }
